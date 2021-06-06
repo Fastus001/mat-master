@@ -7,6 +7,7 @@ import pl.fastus.matmaster.paragraph.Paragraph;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ public class BlogPost {
     private Long headerImageId;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Paragraph> paragraphs;
+    private List<Paragraph> paragraphs = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime creationTime;
