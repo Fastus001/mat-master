@@ -24,10 +24,6 @@ class ImageServiceTest {
     @InjectMocks
     ImageService imageService;
 
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
     void saveImage() {
         Image imageToSave = Image.builder().name("image").picture("some image".getBytes()).build();
