@@ -31,7 +31,7 @@ class ImageServiceTest {
     @Test
     void saveImage() {
         Image imageToSave = Image.builder().name("image").picture("some image".getBytes()).build();
-        Image savedImage = Image.builder().id(1L).name("image").picture("some image".getBytes()).build();
+        Image savedImage = Image.builder().id(ID).name("image").picture("some image".getBytes()).build();
 
         given(imageRepository.save(imageToSave)).willReturn(savedImage);
 
@@ -42,11 +42,11 @@ class ImageServiceTest {
 
     @Test
     void findImageById() {
-        Image image = Image.builder().id(1L).name("image").picture("some image".getBytes()).build();
+        Image image = Image.builder().id(ID).name("image").picture("some image".getBytes()).build();
 
         given(imageRepository.findById(any())).willReturn(Optional.of(image));
 
-        final Optional<Image> imageById = imageService.findImageById(1L);
+        final Optional<Image> imageById = imageService.findImageById(ID);
 
         assertTrue(imageById.isPresent());
         assertEquals(ID, imageById.get().getId());
