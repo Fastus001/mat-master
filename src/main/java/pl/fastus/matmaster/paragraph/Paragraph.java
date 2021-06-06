@@ -1,9 +1,11 @@
 package pl.fastus.matmaster.paragraph;
 
 import lombok.*;
-import pl.fastus.matmaster.blogpost.BlogPost;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
 
 /**
  * Created by Tom - 06.06.2021

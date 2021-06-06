@@ -6,7 +6,7 @@ import pl.fastus.matmaster.enums.Status;
 import pl.fastus.matmaster.paragraph.Paragraph;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class BlogPost {
     private List<Paragraph> paragraphs = new ArrayList<>();
 
     @CreationTimestamp
-    private LocalDateTime creationTime;
+    private Instant creationTime;
 
     @Enumerated
     private Status status;
