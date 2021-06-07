@@ -25,14 +25,14 @@ public class BlogPostService {
         return repository.save(blogPost).getId();
     }
 
-    public List<BlogPostResponse> getAllActiveBlogPosts() {
-        return repository.findAllByStatusEquals(Status.ACTIVE)
+    public List<BlogPostResponse> getBlogPostsByStatus(Status status) {
+        return repository.findAllByStatusEquals(status)
                 .stream()
                 .map(mapper::toBlogPostResponse)
                 .collect(Collectors.toList());
     }
 
-    public BlogPostResponse getBlogPostById(Long id) {
+    public BlogPostResponse getById(Long id) {
         return repository.findById(id)
                 .map(mapper::toBlogPostResponse)
                 .orElseThrow(()->new IllegalArgumentException("No BlogPost with given id number!!"));
@@ -58,5 +58,12 @@ public class BlogPostService {
         toUpdate.setParagraphs(update.getParagraphs());
 
         return toUpdate;
+    }
+
+    public List<BlogPostResponse> getAll() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toBlogPostResponse)
+                .collect(Collectors.toList());
     }
 }

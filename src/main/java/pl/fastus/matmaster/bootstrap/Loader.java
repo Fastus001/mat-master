@@ -33,7 +33,7 @@ public class Loader implements CommandLineRunner {
 
         BlogPost blogPost1 = BlogPost.builder().title("Post 2")
                 .headerImageId(1L)
-                .status(Status.ACTIVE).build();
+                .status(Status.INACTIVE).build();
 
 
         blogPostService.saveBlogPost(blogPost);

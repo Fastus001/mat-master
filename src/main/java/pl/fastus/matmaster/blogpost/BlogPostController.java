@@ -1,12 +1,12 @@
 package pl.fastus.matmaster.blogpost;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.fastus.matmaster.blogpost.dto.BlogPostResponse;
+import pl.fastus.matmaster.enums.Status;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Tom - 06.06.2021
@@ -19,7 +19,16 @@ public class BlogPostController {
     private final BlogPostService blogPostService;
 
     @GetMapping
-    public List<BlogPostResponse> getAll(){
-        return blogPostService.getAllActiveBlogPosts();
+    public List<BlogPostResponse> getAllByStatus(@RequestParam Optional<Status> status){
+        if(status.isEmpty()){
+            return blogPostService.getAll();
+        } else {
+            return blogPostService.getBlogPostsByStatus(status.get());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public BlogPostResponse getBlogPostById(@PathVariable("id") Long id){
+        return blogPostService.getById(id);
     }
 }
