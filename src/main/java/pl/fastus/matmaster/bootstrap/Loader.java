@@ -26,12 +26,17 @@ public class Loader implements CommandLineRunner {
 
         Paragraph paragraph2 = Paragraph.builder().headerText("Header2").text("Text2").build();
 
-        BlogPost blogPost = BlogPost.builder().id(1L).title("Post 1")
+        BlogPost blogPost = BlogPost.builder().title("Post 1")
                 .paragraphs(List.of(paragraph1, paragraph2))
+                .headerImageId(1L)
+                .status(Status.ACTIVE).build();
+
+        BlogPost blogPost1 = BlogPost.builder().title("Post 2")
                 .headerImageId(1L)
                 .status(Status.ACTIVE).build();
 
 
         blogPostService.saveBlogPost(blogPost);
+        blogPostService.saveBlogPost(blogPost1);
     }
 }

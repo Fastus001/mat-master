@@ -20,6 +20,6 @@ public class BlogPostController {
 
     @GetMapping
     public List<BlogPostResponse> getAll(){
-        return blogPostService.getAllBlogPosts();
+        return blogPostService.getAllActiveBlogPosts();
     }
 }

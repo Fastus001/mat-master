@@ -35,6 +35,7 @@ class BlogPostServiceTest {
     Paragraph paragraph1;
     Paragraph paragraph2;
     BlogPost blogPost;
+    BlogPost inactiveBlogPost;
     BlogPostResponse responseToReturn;
 
     @BeforeEach
@@ -44,9 +45,20 @@ class BlogPostServiceTest {
 
         blogPost = BlogPost.builder().id(ID).title(TITLE).headerImageId(HEADER_IMAGE_ID)
                 .paragraphs(List.of(paragraph1,paragraph2)).status(Status.ACTIVE).build();
+        inactiveBlogPost = BlogPost.builder().id(2L).status(Status.INACTIVE).build();
 
         responseToReturn = new BlogPostResponse().setId(ID).setTitle(TITLE)
                                                            .setHeaderImageId(HEADER_IMAGE_ID);
+    }
+
+    @Test
+    void deactivateBlogPost(){
+        given(repository.findById(ID)).willReturn(Optional.of(blogPost));
+
+        Long blogPostId = service.disableById(ID);
+
+        assertEquals(ID, blogPostId);
+        assertEquals(Status.INACTIVE, blogPost.getStatus());
     }
 
     @Test
@@ -76,11 +88,11 @@ class BlogPostServiceTest {
     }
 
     @Test
-    void getAllBlogPosts() {
-        given(repository.findAll()).willReturn(List.of(blogPost));
+    void getAllActiveBlogPosts() {
+        given(repository.findAllByStatusEquals(Status.ACTIVE)).willReturn(List.of(blogPost));
         given(mapper.toBlogPostResponse(any())).willReturn(responseToReturn);
 
-        List<BlogPostResponse> allBlogPosts = service.getAllBlogPosts();
+        List<BlogPostResponse> allBlogPosts = service.getAllActiveBlogPosts();
 
         assertNotNull(allBlogPosts);
         assertEquals(1, allBlogPosts.size());
