@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.fastus.matmaster.blogpost.dto.BlogPostRequest;
 import pl.fastus.matmaster.blogpost.dto.BlogPostResponse;
 import pl.fastus.matmaster.enums.Status;
 import pl.fastus.matmaster.paragraph.Paragraph;
@@ -23,6 +24,7 @@ class BlogPostServiceTest {
     public static final long ID = 1L;
     public static final String TITLE = "Post 1";
     public static final long HEADER_IMAGE_ID = 22L;
+    public static final long HEADER_IMAGE_ID_UPDATED = 10L;
     @Mock
     BlogPostRepository repository;
 
@@ -40,8 +42,8 @@ class BlogPostServiceTest {
 
     @BeforeEach
     void setUp() {
-        paragraph1 = Paragraph.builder().headerText("Header1").text("Text1").build();
-        paragraph2 = Paragraph.builder().headerText("Header2").text("Text2").build();
+        paragraph1 = Paragraph.builder().id(2L).headerText("Header1").text("Text1").build();
+        paragraph2 = Paragraph.builder().id(3L).headerText("Header2").text("Text2").build();
 
         blogPost = BlogPost.builder().id(ID).title(TITLE).headerImageId(HEADER_IMAGE_ID)
                 .paragraphs(List.of(paragraph1,paragraph2)).status(Status.ACTIVE).build();
@@ -98,5 +100,49 @@ class BlogPostServiceTest {
         assertEquals(1, allBlogPosts.size());
         assertEquals(TITLE, allBlogPosts.get(0).getTitle());
         assertEquals(HEADER_IMAGE_ID, allBlogPosts.get(0).getHeaderImageId());
+    }
+
+    @Test
+    void updateBlogPostTitle(){
+        BlogPostRequest update = new BlogPostRequest().setId(ID).setTitle("New title");
+
+        given(repository.findById(any())).willReturn(Optional.of(blogPost));
+
+        BlogPost updatedBlogPost = service.update(update);
+
+        assertEquals("New title", updatedBlogPost.getTitle());
+    }
+
+    @Test
+    void updateBlogPostHeaderImage(){
+        BlogPostRequest update = new BlogPostRequest()
+                .setId(ID)
+                .setHeaderImageId(HEADER_IMAGE_ID_UPDATED);
+
+        given(repository.findById(any())).willReturn(Optional.of(blogPost));
+
+        BlogPost updatedBlogPost = service.update(update);
+
+        assertEquals(HEADER_IMAGE_ID_UPDATED, updatedBlogPost.getHeaderImageId());
+    }
+
+    @Test
+    void updateBlogPostParagraphs(){
+        Paragraph updateParagraph = Paragraph.builder().id(2L).headerText("New Header").text("New Text1").build();
+        Paragraph updateParagraph1 = Paragraph.builder().id(3L).headerText("Header2").text("Text2").build();
+        Paragraph updateParagraph2 = Paragraph.builder().id(4L).headerText("Header2").text("Text2").build();
+
+
+        BlogPostRequest update = new BlogPostRequest()
+                .setId(ID)
+                .setParagraphs(List.of(updateParagraph, updateParagraph1, updateParagraph2));
+
+        given(repository.findById(any())).willReturn(Optional.of(blogPost));
+
+        BlogPost updatedBlogPost = service.update(update);
+        List<Paragraph> paragraphs = updatedBlogPost.getParagraphs();
+
+        assertEquals(3, paragraphs.size());
+        assertEquals("New Header", paragraphs.get(0).getHeaderText());
     }
 }

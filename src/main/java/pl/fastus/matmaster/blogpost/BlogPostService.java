@@ -3,6 +3,7 @@ package pl.fastus.matmaster.blogpost;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.fastus.matmaster.blogpost.dto.BlogPostRequest;
 import pl.fastus.matmaster.blogpost.dto.BlogPostResponse;
 import pl.fastus.matmaster.enums.Status;
 
@@ -45,5 +46,17 @@ public class BlogPostService {
         toDisable.setStatus(Status.INACTIVE);
 
         return toDisable.getId();
+    }
+
+    @Transactional
+    public BlogPost update(BlogPostRequest update) {
+        BlogPost toUpdate = repository.findById(update.getId())
+                .orElseThrow(() -> new IllegalArgumentException("No BlogPost with given id number!!"));
+
+        toUpdate.setTitle(update.getTitle());
+        toUpdate.setHeaderImageId(update.getHeaderImageId());
+        toUpdate.setParagraphs(update.getParagraphs());
+
+        return toUpdate;
     }
 }
