@@ -103,6 +103,17 @@ class BlogPostServiceTest {
     }
 
     @Test
+    void getAllBlogPosts() {
+        given(repository.findAll()).willReturn(List.of(blogPost, inactiveBlogPost));
+        given(mapper.toBlogPostResponse(any())).willReturn(responseToReturn);
+
+        List<BlogPostResponse> allBlogPosts = service.getAll();
+
+        assertNotNull(allBlogPosts);
+        assertEquals(2, allBlogPosts.size());
+    }
+
+    @Test
     void updateBlogPostTitle(){
         BlogPostRequest update = new BlogPostRequest().setId(ID).setTitle("New title");
 
