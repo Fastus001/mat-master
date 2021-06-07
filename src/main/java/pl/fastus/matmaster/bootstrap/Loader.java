@@ -20,7 +20,7 @@ public class Loader implements CommandLineRunner {
     private final BlogPostService blogPostService;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         Paragraph paragraph1 = Paragraph.builder().headerText("Header1").text("Text1").build();
 
