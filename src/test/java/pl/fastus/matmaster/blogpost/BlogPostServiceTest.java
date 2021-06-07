@@ -11,9 +11,9 @@ import pl.fastus.matmaster.enums.Status;
 import pl.fastus.matmaster.paragraph.Paragraph;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -24,17 +24,18 @@ class BlogPostServiceTest {
     public static final String TITLE = "Post 1";
     public static final long HEADER_IMAGE_ID = 22L;
     @Mock
-    BlogPostRepository blogPostRepository;
+    BlogPostRepository repository;
 
     @Mock
     BlogPostMapper mapper;
 
     @InjectMocks
-    BlogPostService blogPostService;
+    BlogPostService service;
 
     Paragraph paragraph1;
     Paragraph paragraph2;
     BlogPost blogPost;
+    BlogPostResponse responseToReturn;
 
     @BeforeEach
     void setUp() {
@@ -43,29 +44,43 @@ class BlogPostServiceTest {
 
         blogPost = BlogPost.builder().id(ID).title(TITLE).headerImageId(HEADER_IMAGE_ID)
                 .paragraphs(List.of(paragraph1,paragraph2)).status(Status.ACTIVE).build();
+
+        responseToReturn = new BlogPostResponse().setId(ID).setTitle(TITLE)
+                                                           .setHeaderImageId(HEADER_IMAGE_ID);
+    }
+
+    @Test
+    void getBlogPostById(){
+        given(repository.findById(ID)).willReturn(Optional.of(blogPost));
+        given(mapper.toBlogPostResponse(blogPost)).willReturn(responseToReturn);
+
+        BlogPostResponse blogPost = service.getBlogPostById(ID);
+
+        assertEquals(ID, blogPost.getId());
+    }
+
+    @Test
+    void getBlogPostByIdWithWrongId(){
+        given(repository.findById(any())).willReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, ()-> service.getBlogPostById(20L));
     }
 
     @Test
     void saveBlogPost() {
-        given(blogPostRepository.save(any(BlogPost.class))).willReturn(blogPost);
+        given(repository.save(any(BlogPost.class))).willReturn(blogPost);
 
-        final Long aLong = blogPostService.saveBlogPost(blogPost);
+        final Long aLong = service.saveBlogPost(blogPost);
 
         assertEquals(1, aLong);
     }
 
     @Test
     void getAllBlogPosts() {
-        BlogPostResponse blogPostResponse =
-                new BlogPostResponse()
-                .setId(ID)
-                .setTitle(TITLE)
-                .setHeaderImageId(HEADER_IMAGE_ID);
+        given(repository.findAll()).willReturn(List.of(blogPost));
+        given(mapper.toBlogPostResponse(any())).willReturn(responseToReturn);
 
-        given(blogPostRepository.findAll()).willReturn(List.of(blogPost));
-        given(mapper.toBlogPostResponse(any())).willReturn(blogPostResponse);
-
-        List<BlogPostResponse> allBlogPosts = blogPostService.getAllBlogPosts();
+        List<BlogPostResponse> allBlogPosts = service.getAllBlogPosts();
 
         assertNotNull(allBlogPosts);
         assertEquals(1, allBlogPosts.size());

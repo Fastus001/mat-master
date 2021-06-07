@@ -28,4 +28,10 @@ public class BlogPostService {
                 .map(mapper::toBlogPostResponse)
                 .collect(Collectors.toList());
     }
+
+    public BlogPostResponse getBlogPostById(Long id) {
+        return blogPostRepository.findById(id)
+                .map(mapper::toBlogPostResponse)
+                .orElseThrow(()->new IllegalArgumentException("No BlogPost with given id number!!"));
+    }
 }
