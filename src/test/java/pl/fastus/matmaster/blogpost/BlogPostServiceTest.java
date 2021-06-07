@@ -68,7 +68,7 @@ class BlogPostServiceTest {
         given(repository.findById(ID)).willReturn(Optional.of(blogPost));
         given(mapper.toBlogPostResponse(blogPost)).willReturn(responseToReturn);
 
-        BlogPostResponse blogPost = service.getBlogPostById(ID);
+        BlogPostResponse blogPost = service.getById(ID);
 
         assertEquals(ID, blogPost.getId());
     }
@@ -77,7 +77,7 @@ class BlogPostServiceTest {
     void getBlogPostByIdWithWrongId(){
         given(repository.findById(any())).willReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, ()-> service.getBlogPostById(20L));
+        assertThrows(IllegalArgumentException.class, ()-> service.getById(20L));
     }
 
     @Test
@@ -94,7 +94,7 @@ class BlogPostServiceTest {
         given(repository.findAllByStatusEquals(Status.ACTIVE)).willReturn(List.of(blogPost));
         given(mapper.toBlogPostResponse(any())).willReturn(responseToReturn);
 
-        List<BlogPostResponse> allBlogPosts = service.getAllActiveBlogPosts();
+        List<BlogPostResponse> allBlogPosts = service.getBlogPostsByStatus(Status.ACTIVE);
 
         assertNotNull(allBlogPosts);
         assertEquals(1, allBlogPosts.size());
