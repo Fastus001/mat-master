@@ -37,7 +37,14 @@ public class BlogPostController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long createBlogPost(@RequestBody BlogPostRequest blogPostRequest){
-        return blogPostService.saveBlogPost(blogPostRequest);
+    public Long createBlogPost(@RequestBody BlogPostRequest postRequest){
+        return blogPostService.saveBlogPost(postRequest);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public BlogPostResponse update(@PathVariable("id") Long id,
+                                   @RequestBody BlogPostRequest postRequest){
+        return blogPostService.update(id, postRequest);
     }
 }

@@ -9,7 +9,6 @@ import java.util.List;
 @Accessors(chain = true)
 @Data
 public class BlogPostRequest {
-    private Long id;
     private String title;
     private Long headerImageId;
     private List<Paragraph> paragraphs;

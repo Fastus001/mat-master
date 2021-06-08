@@ -51,15 +51,15 @@ public class BlogPostService {
     }
 
     @Transactional
-    public BlogPost update(BlogPostRequest update) {
-        BlogPost toUpdate = repository.findById(update.getId())
-                .orElseThrow(() -> new IllegalArgumentException("No BlogPost with given id number!!"));
+    public BlogPostResponse update(Long id, BlogPostRequest update) {
+        BlogPost toUpdate = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No BlogPost with given id number to update!!"));
 
         toUpdate.setTitle(update.getTitle());
         toUpdate.setHeaderImageId(update.getHeaderImageId());
         toUpdate.setParagraphs(update.getParagraphs());
 
-        return toUpdate;
+        return mapper.toBlogPostResponse(toUpdate);
     }
 
     public List<BlogPostResponse> getAll() {

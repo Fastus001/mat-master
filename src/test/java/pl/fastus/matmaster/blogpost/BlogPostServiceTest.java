@@ -83,7 +83,6 @@ class BlogPostServiceTest {
     @Test
     void saveBlogPost() {
         BlogPostRequest request = new BlogPostRequest()
-                .setId(ID)
                 .setTitle("New title");
 
         given(mapper.toBlogPost(any())).willReturn(blogPost);
@@ -120,26 +119,30 @@ class BlogPostServiceTest {
 
     @Test
     void updateBlogPostTitle(){
-        BlogPostRequest update = new BlogPostRequest().setId(ID).setTitle("New title");
+        BlogPostRequest update = new BlogPostRequest().setTitle("New title");
+        BlogPostResponse response = new BlogPostResponse().setTitle("New title");
 
         given(repository.findById(any())).willReturn(Optional.of(blogPost));
+        given(mapper.toBlogPostResponse(any())).willReturn(response);
 
-        BlogPost updatedBlogPost = service.update(update);
+        BlogPostResponse updatedResponse = service.update(ID,update);
 
-        assertEquals("New title", updatedBlogPost.getTitle());
+        assertEquals("New title", updatedResponse.getTitle());
     }
 
     @Test
     void updateBlogPostHeaderImage(){
         BlogPostRequest update = new BlogPostRequest()
-                .setId(ID)
+                .setHeaderImageId(HEADER_IMAGE_ID_UPDATED);
+        BlogPostResponse response = new BlogPostResponse()
                 .setHeaderImageId(HEADER_IMAGE_ID_UPDATED);
 
         given(repository.findById(any())).willReturn(Optional.of(blogPost));
+        given(mapper.toBlogPostResponse(any())).willReturn(response);
 
-        BlogPost updatedBlogPost = service.update(update);
+        BlogPostResponse updatedResponse = service.update(ID,update);
 
-        assertEquals(HEADER_IMAGE_ID_UPDATED, updatedBlogPost.getHeaderImageId());
+        assertEquals(HEADER_IMAGE_ID_UPDATED, updatedResponse.getHeaderImageId());
     }
 
     @Test
@@ -150,13 +153,15 @@ class BlogPostServiceTest {
 
 
         BlogPostRequest update = new BlogPostRequest()
-                .setId(ID)
+                .setParagraphs(List.of(updateParagraph, updateParagraph1, updateParagraph2));
+        BlogPostResponse response = new BlogPostResponse()
                 .setParagraphs(List.of(updateParagraph, updateParagraph1, updateParagraph2));
 
         given(repository.findById(any())).willReturn(Optional.of(blogPost));
+        given(mapper.toBlogPostResponse(any())).willReturn(response);
 
-        BlogPost updatedBlogPost = service.update(update);
-        List<Paragraph> paragraphs = updatedBlogPost.getParagraphs();
+        BlogPostResponse updatedResponse = service.update(ID,update);
+        List<Paragraph> paragraphs = updatedResponse.getParagraphs();
 
         assertEquals(3, paragraphs.size());
         assertEquals("New Header", paragraphs.get(0).getHeaderText());

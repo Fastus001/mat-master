@@ -24,8 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -66,7 +65,7 @@ class BlogPostControllerTest {
     }
 
     @Test
-    void getAllActive() throws Exception {
+    void getAllByStatusActive() throws Exception {
         given(service.getBlogPostsByStatus(Status.ACTIVE)).willReturn(responses.subList(0,1));
 
         mockMvc.perform(get("/api/v1/blogpost?status=ACTIVE"))
@@ -121,5 +120,31 @@ class BlogPostControllerTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    void update() throws Exception {
+        BlogPostRequest request = new BlogPostRequest()
+                .setTitle("Title")
+                .setParagraphs(List.of(new Paragraph(), new Paragraph())                )
+                .setHeaderImageId(25L);
+
+        BlogPostResponse response = new BlogPostResponse()
+                .setId(1L)
+                .setTitle("Title")
+                .setParagraphs(List.of(new Paragraph(), new Paragraph()))
+                .setHeaderImageId(25L);
+
+
+        given(service.update(any(), any(BlogPostRequest.class))).willReturn(response);
+
+        mockMvc.perform(put("/api/v1/blogpost/1")
+                .content(asJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.title", is("Title")))
+                .andExpect(jsonPath("$.headerImageId", is(25)));
     }
 }
