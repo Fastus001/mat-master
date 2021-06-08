@@ -21,8 +21,10 @@ public class BlogPostService {
     private final BlogPostMapper mapper;
 
 
-    public Long saveBlogPost(BlogPost blogPost){
-        return repository.save(blogPost).getId();
+    public Long saveBlogPost(BlogPostRequest blogPostRequest){
+        BlogPost toSave = mapper.toBlogPost(blogPostRequest);
+        toSave.setStatus(Status.ACTIVE);
+        return repository.save(toSave).getId();
     }
 
     public List<BlogPostResponse> getBlogPostsByStatus(Status status) {

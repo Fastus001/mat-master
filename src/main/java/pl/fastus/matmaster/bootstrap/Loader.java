@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import pl.fastus.matmaster.blogpost.BlogPost;
 import pl.fastus.matmaster.blogpost.BlogPostService;
+import pl.fastus.matmaster.blogpost.dto.BlogPostRequest;
 import pl.fastus.matmaster.enums.Status;
 import pl.fastus.matmaster.paragraph.Paragraph;
 
@@ -26,14 +27,12 @@ public class Loader implements CommandLineRunner {
 
         Paragraph paragraph2 = Paragraph.builder().headerText("Header2").text("Text2").build();
 
-        BlogPost blogPost = BlogPost.builder().title("Post 1")
-                .paragraphs(List.of(paragraph1, paragraph2))
-                .headerImageId(1L)
-                .status(Status.ACTIVE).build();
+        BlogPostRequest blogPost = new BlogPostRequest().setTitle("Post 1")
+                .setParagraphs(List.of(paragraph1, paragraph2))
+                .setHeaderImageId(1L);
 
-        BlogPost blogPost1 = BlogPost.builder().title("Post 2")
-                .headerImageId(1L)
-                .status(Status.INACTIVE).build();
+        BlogPostRequest blogPost1 = new BlogPostRequest().setTitle("Post 2")
+                .setHeaderImageId(1L);
 
 
         blogPostService.saveBlogPost(blogPost);

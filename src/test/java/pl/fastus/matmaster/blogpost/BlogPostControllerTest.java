@@ -1,26 +1,32 @@
 package pl.fastus.matmaster.blogpost;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pl.fastus.matmaster.blogpost.dto.BlogPostRequest;
 import pl.fastus.matmaster.blogpost.dto.BlogPostResponse;
 import pl.fastus.matmaster.enums.Status;
+import pl.fastus.matmaster.paragraph.Paragraph;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class BlogPostControllerTest {
@@ -84,5 +90,36 @@ class BlogPostControllerTest {
                 .andExpect(jsonPath("$.headerImageId", is(12)));
 
         verify(service, times(1)).getById(any());
+    }
+
+    @Test
+    void createBlogPost() throws Exception {
+        BlogPostRequest request = new BlogPostRequest()
+                .setTitle("Title")
+                .setParagraphs(
+                        List.of(new Paragraph(), new Paragraph())
+                )
+                .setHeaderImageId(25L);
+
+        given(service.saveBlogPost(any(BlogPostRequest.class))).willReturn(1L);
+
+        String content = mockMvc.perform(post("/api/v1/blogpost")
+                .content(asJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertEquals("1", content);
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

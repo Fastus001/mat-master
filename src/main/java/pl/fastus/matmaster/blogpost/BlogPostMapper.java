@@ -1,6 +1,7 @@
 package pl.fastus.matmaster.blogpost;
 
 import org.mapstruct.Mapper;
+import pl.fastus.matmaster.blogpost.dto.BlogPostRequest;
 import pl.fastus.matmaster.blogpost.dto.BlogPostResponse;
 
 /**
@@ -10,4 +11,6 @@ import pl.fastus.matmaster.blogpost.dto.BlogPostResponse;
 public interface BlogPostMapper {
 
     BlogPostResponse toBlogPostResponse(BlogPost blogPost);
+
+    BlogPost toBlogPost(BlogPostRequest postRequest);
 }
