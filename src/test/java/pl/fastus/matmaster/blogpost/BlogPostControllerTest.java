@@ -142,7 +142,7 @@ class BlogPostControllerTest {
                 .content(asJsonString(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("Title")))
                 .andExpect(jsonPath("$.headerImageId", is(25)));

@@ -42,9 +42,15 @@ public class BlogPostController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public BlogPostResponse update(@PathVariable("id") Long id,
                                    @RequestBody BlogPostRequest postRequest){
         return blogPostService.update(id, postRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deactivateBlogPost(@PathVariable("id") Long id){
+        blogPostService.disableById(id);
     }
 }
