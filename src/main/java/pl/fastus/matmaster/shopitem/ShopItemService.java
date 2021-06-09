@@ -21,4 +21,9 @@ public class ShopItemService {
                 .collect(Collectors.toList());
     }
 
+    public ShopItemResponse getShopItemById(Long id) {
+        return repository.findById(id)
+                .map(mapper::toShopItemResponse)
+                .orElseThrow(()-> new IllegalArgumentException("No ShopItem with given ID!!"));
+    }
 }
