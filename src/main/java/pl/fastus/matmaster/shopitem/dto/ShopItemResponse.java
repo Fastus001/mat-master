@@ -7,8 +7,9 @@ import java.math.BigDecimal;
 
 @Accessors(chain = true)
 @Data
-public class ShopItemRequest {
+public class ShopItemResponse {
 
+    private Long id;
     private String name;
     private String subTitle;
     private String description;
