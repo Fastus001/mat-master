@@ -81,14 +81,14 @@ class BlogPostServiceTest {
     }
 
     @Test
-    void saveBlogPost() {
+    void createBlogPost() {
         BlogPostRequest request = new BlogPostRequest()
                 .setTitle("New title");
 
         given(mapper.toBlogPost(any())).willReturn(blogPost);
         given(repository.save(any(BlogPost.class))).willReturn(blogPost);
 
-        final Long aLong = service.saveBlogPost(request);
+        final Long aLong = service.createBlogPost(request);
 
         assertEquals(1, aLong);
     }

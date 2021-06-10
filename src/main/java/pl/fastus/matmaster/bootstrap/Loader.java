@@ -3,10 +3,8 @@ package pl.fastus.matmaster.bootstrap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import pl.fastus.matmaster.blogpost.BlogPost;
 import pl.fastus.matmaster.blogpost.BlogPostService;
 import pl.fastus.matmaster.blogpost.dto.BlogPostRequest;
-import pl.fastus.matmaster.enums.Status;
 import pl.fastus.matmaster.paragraph.Paragraph;
 
 import java.util.List;
@@ -35,7 +33,7 @@ public class Loader implements CommandLineRunner {
                 .setHeaderImageId(1L);
 
 
-        blogPostService.saveBlogPost(blogPost);
-        blogPostService.saveBlogPost(blogPost1);
+        blogPostService.createBlogPost(blogPost);
+        blogPostService.createBlogPost(blogPost1);
     }
 }

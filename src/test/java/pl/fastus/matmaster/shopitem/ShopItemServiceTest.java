@@ -6,14 +6,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.fastus.matmaster.blogpost.dto.BlogPostResponse;
+import pl.fastus.matmaster.shopitem.dto.ShopItemRequest;
 import pl.fastus.matmaster.shopitem.dto.ShopItemResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -88,6 +89,43 @@ class ShopItemServiceTest {
 
         verify(repository, times(1)).findById(any());
         verifyNoInteractions(mapper);
+    }
+
+    @Test
+    void createShopItem() {
+        ShopItemRequest shopItemRequest = new ShopItemRequest();
+        ShopItem toSave = new ShopItem();
+        ShopItem savedShopItem = ShopItem.builder().id(1L).build();
+
+        given(mapper.toShopItem(any())).willReturn(toSave);
+        given(repository.save(any(ShopItem.class))).willReturn(savedShopItem);
+
+        Long savedItemId = service.createShopItem(shopItemRequest);
+
+        assertEquals(1, savedItemId);
+    }
+
+    @Test
+    void updateShopItem() {
+        ShopItemRequest update = new ShopItemRequest()
+                .setName("Item name")
+                .setPrice(BigDecimal.valueOf(125.20));
+
+        ShopItemResponse response = new ShopItemResponse()
+                .setName("Item name")
+                .setPrice(BigDecimal.valueOf(125.20));
+
+        given(repository.findById(any())).willReturn(Optional.of(shopItems.get(0)));
+        given(mapper.toShopItemResponse(any(ShopItem.class))).willReturn(response);
+
+        ShopItemResponse updatedItemResponse = service.updateShopItem(1L, update);
+
+        assertAll(
+                ()->assertEquals("Item name", updatedItemResponse.getName()),
+                ()->assertEquals(BigDecimal.valueOf(125.20), updatedItemResponse.getPrice()),
+                ()->assertNull(updatedItemResponse.getSubTitle()),
+                ()->assertNull(updatedItemResponse.getDescription())
+        );
     }
 
     private List<ShopItem> getShopItemList() {

@@ -2,7 +2,6 @@ package pl.fastus.matmaster.blogpost;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import pl.fastus.matmaster.blogpost.dto.BlogPostRequest;
 import pl.fastus.matmaster.blogpost.dto.BlogPostResponse;
@@ -38,7 +37,7 @@ public class BlogPostController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Long createBlogPost(@RequestBody BlogPostRequest postRequest){
-        return blogPostService.saveBlogPost(postRequest);
+        return blogPostService.createBlogPost(postRequest);
     }
 
     @PutMapping("/{id}")
