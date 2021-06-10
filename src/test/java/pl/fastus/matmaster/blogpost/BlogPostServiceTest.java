@@ -21,7 +21,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class BlogPostServiceTest {
 
-    public static final long ID = 1L;
+    public static final long ID_ONE = 1L;
     public static final String TITLE = "Post 1";
     public static final long HEADER_IMAGE_ID = 22L;
     public static final long HEADER_IMAGE_ID_UPDATED = 10L;
@@ -45,32 +45,32 @@ class BlogPostServiceTest {
         paragraph1 = Paragraph.builder().id(2L).headerText("Header1").text("Text1").build();
         paragraph2 = Paragraph.builder().id(3L).headerText("Header2").text("Text2").build();
 
-        blogPost = BlogPost.builder().id(ID).title(TITLE).headerImageId(HEADER_IMAGE_ID)
+        blogPost = BlogPost.builder().id(ID_ONE).title(TITLE).headerImageId(HEADER_IMAGE_ID)
                 .paragraphs(List.of(paragraph1,paragraph2)).status(Status.ACTIVE).build();
         inactiveBlogPost = BlogPost.builder().id(2L).status(Status.INACTIVE).build();
 
-        responseToReturn = new BlogPostResponse().setId(ID).setTitle(TITLE)
+        responseToReturn = new BlogPostResponse().setId(ID_ONE).setTitle(TITLE)
                                                            .setHeaderImageId(HEADER_IMAGE_ID);
     }
 
     @Test
     void deactivateBlogPost(){
-        given(repository.findById(ID)).willReturn(Optional.of(blogPost));
+        given(repository.findById(ID_ONE)).willReturn(Optional.of(blogPost));
 
-        Long blogPostId = service.disableById(ID);
+        Long blogPostId = service.disableById(ID_ONE);
 
-        assertEquals(ID, blogPostId);
+        assertEquals(ID_ONE, blogPostId);
         assertEquals(Status.INACTIVE, blogPost.getStatus());
     }
 
     @Test
     void getBlogPostById(){
-        given(repository.findById(ID)).willReturn(Optional.of(blogPost));
+        given(repository.findById(ID_ONE)).willReturn(Optional.of(blogPost));
         given(mapper.toBlogPostResponse(blogPost)).willReturn(responseToReturn);
 
-        BlogPostResponse blogPost = service.getById(ID);
+        BlogPostResponse blogPost = service.getById(ID_ONE);
 
-        assertEquals(ID, blogPost.getId());
+        assertEquals(ID_ONE, blogPost.getId());
     }
 
     @Test
@@ -125,7 +125,7 @@ class BlogPostServiceTest {
         given(repository.findById(any())).willReturn(Optional.of(blogPost));
         given(mapper.toBlogPostResponse(any())).willReturn(response);
 
-        BlogPostResponse updatedResponse = service.update(ID,update);
+        BlogPostResponse updatedResponse = service.update(ID_ONE,update);
 
         assertEquals("New title", updatedResponse.getTitle());
     }
@@ -140,7 +140,7 @@ class BlogPostServiceTest {
         given(repository.findById(any())).willReturn(Optional.of(blogPost));
         given(mapper.toBlogPostResponse(any())).willReturn(response);
 
-        BlogPostResponse updatedResponse = service.update(ID,update);
+        BlogPostResponse updatedResponse = service.update(ID_ONE,update);
 
         assertEquals(HEADER_IMAGE_ID_UPDATED, updatedResponse.getHeaderImageId());
     }
@@ -160,7 +160,7 @@ class BlogPostServiceTest {
         given(repository.findById(any())).willReturn(Optional.of(blogPost));
         given(mapper.toBlogPostResponse(any())).willReturn(response);
 
-        BlogPostResponse updatedResponse = service.update(ID,update);
+        BlogPostResponse updatedResponse = service.update(ID_ONE,update);
         List<Paragraph> paragraphs = updatedResponse.getParagraphs();
 
         assertEquals(3, paragraphs.size());
