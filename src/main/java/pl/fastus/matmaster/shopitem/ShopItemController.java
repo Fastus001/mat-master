@@ -32,4 +32,11 @@ public class ShopItemController {
     public Long createShopItem(@RequestBody ShopItemRequest request) {
         return service.createShopItem(request);
     }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ShopItemResponse updateShopItem(@PathVariable("id") Long id,
+                                           @RequestBody ShopItemRequest request) {
+        return service.updateShopItem(id, request);
+    }
 }

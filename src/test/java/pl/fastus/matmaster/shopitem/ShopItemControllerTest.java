@@ -20,8 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -98,6 +97,28 @@ class ShopItemControllerTest {
                 .getContentAsString();
 
         assertEquals("2", content);
+    }
+
+    @Test
+    void updateShopItem() throws Exception {
+        ShopItemRequest request = new ShopItemRequest().setName(NAME)
+                .setSubTitle(SUBTITLE)
+                .setDescription(DESCRIPTION)
+                .setPrice(BigDecimal.valueOf(VALUE));
+
+        given(service.updateShopItem(any(), any(ShopItemRequest.class)))
+                .willReturn(shopItemResponses.get(1));
+
+        mockMvc.perform(put(API_V_1_SHOP_ITEM + "/2")
+                .content(asJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.name", is(NAME)))
+                .andExpect(jsonPath("$.subTitle", is(SUBTITLE)))
+                .andExpect(jsonPath("$.description", is(DESCRIPTION)))
+                .andExpect(jsonPath("$.price", is(VALUE)));
     }
 
     private List<ShopItemResponse> getShopItemResponses() {
