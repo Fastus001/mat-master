@@ -3,6 +3,7 @@ package pl.fastus.matmaster.shopitem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pl.fastus.matmaster.shopitem.dto.ShopItemRequest;
 import pl.fastus.matmaster.shopitem.dto.ShopItemResponse;
 
 import java.util.List;
@@ -24,5 +25,11 @@ public class ShopItemController {
     @ResponseStatus(HttpStatus.OK)
     public ShopItemResponse getById(@PathVariable("id") Long id){
         return service.getShopItemById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Long createShopItem(@RequestBody ShopItemRequest request) {
+        return service.createShopItem(request);
     }
 }

@@ -1,24 +1,29 @@
 package pl.fastus.matmaster.shopitem;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pl.fastus.matmaster.shopitem.dto.ShopItemRequest;
 import pl.fastus.matmaster.shopitem.dto.ShopItemResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class ShopItemControllerTest {
@@ -73,6 +78,27 @@ class ShopItemControllerTest {
                 .andExpect(jsonPath("$.price", is(VALUE)));
 
     }
+    
+    @Test
+    void createShopItem() throws Exception {
+        ShopItemRequest requestToSave = new ShopItemRequest().setName(NAME)
+                .setSubTitle(SUBTITLE)
+                .setDescription(DESCRIPTION)
+                .setPrice(BigDecimal.valueOf(VALUE));
+
+        given(service.createShopItem(requestToSave)).willReturn(2L);
+
+        String content = mockMvc.perform(post(API_V_1_SHOP_ITEM)
+                .content(asJsonString(requestToSave))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertEquals("2", content);
+    }
 
     private List<ShopItemResponse> getShopItemResponses() {
         return List.of(
@@ -87,5 +113,13 @@ class ShopItemControllerTest {
                         .setDescription(DESCRIPTION)
                         .setPrice(BigDecimal.valueOf(VALUE))
         );
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
