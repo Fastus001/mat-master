@@ -55,4 +55,13 @@ public class UserService {
 
         return mapper.toUserResponse(user);
     }
+
+    @Transactional
+    public String deactivateUser(String login) {
+        final User user = repository.findById(login)
+                .orElseThrow(() -> new UserNotFoundException("There is not User with given login!"));
+        user.setStatus(Status.INACTIVE);
+
+        return user.getLogin();
+    }
 }

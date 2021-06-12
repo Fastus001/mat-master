@@ -161,4 +161,20 @@ class UserServiceTest {
         verify(repository, times(1)).findById(any());
         verifyNoInteractions(mapper);
     }
+
+    @Test
+    void deactivateUser() {
+        given(repository.findById(any())).willReturn(Optional.ofNullable(userToReturn));
+
+        String userId = service.deactivateUser(LOGIN);
+
+        assertEquals(LOGIN, userId);
+    }
+
+    @Test
+    void deactivateUserShouldThrowException() {
+        given(repository.findById(any())).willReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, ()->service.deactivateUser(LOGIN));
+    }
 }
