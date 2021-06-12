@@ -19,6 +19,8 @@ public class User {
     private String name;
     private String sureName;
 
+    private String role;
+
     @CreationTimestamp
     private LocalDateTime created;
 }
