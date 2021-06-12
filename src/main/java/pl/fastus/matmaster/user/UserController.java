@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.fastus.matmaster.user.dto.UserRequest;
 import pl.fastus.matmaster.user.dto.UserResponse;
+import pl.fastus.matmaster.user.dto.UserUpdate;
 
 /**
  * Created by Tom - 12.06.2021
@@ -20,5 +21,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse createUser(@RequestBody UserRequest userRequest) {
         return userService.createUser(userRequest);
+    }
+
+    @PutMapping("/{login}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponse update(@PathVariable("login") String id, @RequestBody UserUpdate userUpdate) {
+        return userService.updateUser(id, userUpdate);
     }
 }

@@ -12,12 +12,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.fastus.matmaster.user.dto.UserRequest;
 import pl.fastus.matmaster.user.dto.UserResponse;
+import pl.fastus.matmaster.user.dto.UserUpdate;
 
 import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -63,6 +66,25 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.created[3]", is(0)))
                 .andExpect(jsonPath("$.created[4]", is(1)));
 
+    }
+
+    @Test
+    void update() throws Exception {
+        given(service.updateUser(any(), any(UserUpdate.class))).willReturn(userResponse);
+
+        mockMvc.perform(put("/api/v1/user/"+LOGIN)
+                .content(asJsonString(userRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.login", is(LOGIN)))
+                .andExpect(jsonPath("$.name", is("Tom")))
+                .andExpect(jsonPath("$.sureName", is("Kar")))
+                .andExpect(jsonPath("$.created[0]", is(2020)))
+                .andExpect(jsonPath("$.created[1]", is(6)))
+                .andExpect(jsonPath("$.created[2]", is(5)))
+                .andExpect(jsonPath("$.created[3]", is(0)))
+                .andExpect(jsonPath("$.created[4]", is(1)));
     }
 
     private void setUserRequestAndResponse() {
