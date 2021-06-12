@@ -1,6 +1,7 @@
 package pl.fastus.matmaster.user.dto;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 /**
  * Created by Tom - 12.06.2021
  */
+@Accessors(chain = true)
 @Data
 public class UserRequest {
 

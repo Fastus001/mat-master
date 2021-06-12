@@ -34,6 +34,6 @@ public class BlogPost {
     @CreationTimestamp
     private Instant creationTime;
 
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     private Status status;
 }

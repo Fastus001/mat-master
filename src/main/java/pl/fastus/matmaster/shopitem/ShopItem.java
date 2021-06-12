@@ -25,5 +25,7 @@ public class ShopItem {
     private String description;
 
     private BigDecimal price;
+
+    @Enumerated(value = EnumType.STRING)
     private Status status;
 }
