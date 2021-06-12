@@ -49,6 +49,22 @@ class UserControllerTest {
     }
 
     @Test
+    void getUserByLogin() throws Exception {
+        given(service.getUserByLogin(any())).willReturn(userResponse);
+
+        mockMvc.perform(get("/api/v1/user/"+LOGIN))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.login", is(LOGIN)))
+                .andExpect(jsonPath("$.name", is("Tom")))
+                .andExpect(jsonPath("$.sureName", is("Kar")))
+                .andExpect(jsonPath("$.created[0]", is(2020)))
+                .andExpect(jsonPath("$.created[1]", is(6)))
+                .andExpect(jsonPath("$.created[2]", is(5)))
+                .andExpect(jsonPath("$.created[3]", is(0)))
+                .andExpect(jsonPath("$.created[4]", is(1)));
+    }
+
+    @Test
     void createUser() throws Exception {
         given(service.createUser(userRequest)).willReturn(userResponse);
 

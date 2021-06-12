@@ -17,6 +17,12 @@ public class UserController {
 
     private final UserService userService;
 
+    @GetMapping("/{login}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponse getUser(@PathVariable("login") String id) {
+        return userService.getUserByLogin(id);
+    }
+
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse createUser(@RequestBody UserRequest userRequest) {
