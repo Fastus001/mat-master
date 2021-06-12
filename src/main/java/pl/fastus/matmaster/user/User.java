@@ -2,8 +2,11 @@ package pl.fastus.matmaster.user;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import pl.fastus.matmaster.enums.Status;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
@@ -24,15 +27,19 @@ public class User {
 
     private String role;
 
+    @Enumerated(value = EnumType.STRING)
+    private Status status;
+
     @CreationTimestamp
     private LocalDateTime created;
 
     @Builder
-    public User(String login, String password, String name, String sureName, String role) {
+    public User(String login, String password, String name, String sureName, String role, Status status) {
         this.login = login;
         this.password = password;
         this.name = name;
         this.sureName = sureName;
         this.role = role;
+        this.status = status;
     }
 }

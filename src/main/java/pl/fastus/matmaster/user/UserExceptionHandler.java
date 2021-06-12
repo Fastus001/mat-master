@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import pl.fastus.matmaster.exceptions.UserAlreadyExistException;
+import pl.fastus.matmaster.exceptions.UserNotFoundException;
 
 /**
  * Created by Tom - 12.06.2021
@@ -13,10 +14,13 @@ import pl.fastus.matmaster.exceptions.UserAlreadyExistException;
 @ControllerAdvice
 public class UserExceptionHandler {
 
-    @ExceptionHandler(UserAlreadyExistException.class)
+    @ExceptionHandler({
+            UserAlreadyExistException.class,
+            UserNotFoundException.class
+    })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public String loginInUse(RuntimeException e) {
+    public String handleExceptions(RuntimeException e) {
         return e.getMessage();
     }
 }
