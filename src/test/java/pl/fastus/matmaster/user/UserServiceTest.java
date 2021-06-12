@@ -55,7 +55,6 @@ class UserServiceTest {
                 .build();
 
         userResponseToReturn = new UserResponse().setLogin(LOGIN)
-                .setPassword("password")
                 .setName("Tom")
                 .setSureName("Kar");
     }
@@ -70,7 +69,6 @@ class UserServiceTest {
 
         assertAll(
                 ()->assertEquals(LOGIN, userResponse.getLogin()),
-                ()->assertEquals("password", userResponse.getPassword()),
                 ()->assertEquals("Tom", userResponse.getName()),
                 ()->assertEquals("Kar", userResponse.getSureName())
         );
@@ -101,7 +99,6 @@ class UserServiceTest {
 
         assertAll(
                 ()->assertEquals(LOGIN, userResponse.getLogin()),
-                ()->assertEquals("password", userResponse.getPassword()),
                 ()->assertEquals("Tom", userResponse.getName()),
                 ()->assertEquals("Kar", userResponse.getSureName())
         );
@@ -128,7 +125,6 @@ class UserServiceTest {
 
         final UserResponse userResponseToReturn = new UserResponse()
                 .setLogin(LOGIN)
-                .setPassword("new password")
                 .setName("Greg")
                 .setSureName("Karma");
 
@@ -139,7 +135,6 @@ class UserServiceTest {
 
         assertAll(
                 ()->assertEquals(LOGIN, userResponse.getLogin()),
-                ()->assertEquals("new password", userResponse.getPassword()),
                 ()->assertEquals("Greg", userResponse.getName()),
                 ()->assertEquals("Karma", userResponse.getSureName())
         );

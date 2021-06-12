@@ -26,7 +26,6 @@ class UserMapperTest {
 
         assertAll(
                 ()->assertEquals("tomek@midex.pl", userResponse.getLogin()),
-                ()->assertEquals("password", userResponse.getPassword()),
                 ()->assertEquals("Tom", userResponse.getName()),
                 ()->assertEquals("Kar", userResponse.getSureName())
         );
