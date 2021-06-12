@@ -2,11 +2,13 @@ package pl.fastus.matmaster.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.fastus.matmaster.enums.Status;
 import pl.fastus.matmaster.exceptions.UserAlreadyExistException;
 import pl.fastus.matmaster.exceptions.UserNotFoundException;
 import pl.fastus.matmaster.user.dto.UserRequest;
 import pl.fastus.matmaster.user.dto.UserResponse;
+import pl.fastus.matmaster.user.dto.UserUpdate;
 
 import java.util.Optional;
 
@@ -40,5 +42,17 @@ public class UserService {
         return repository.findById(login)
                 .map(mapper::toUserResponse)
                 .orElseThrow(()->new UserNotFoundException("There is not User with given login!"));
+    }
+
+    @Transactional
+    public UserResponse updateUser(String login, UserUpdate userUpdate) {
+        final User user = repository.findById(login)
+                .orElseThrow(() -> new UserNotFoundException("There is not User with given login!"));
+        //todo - add encrypt!!
+        user.setPassword(userUpdate.getPassword());
+        user.setName(userUpdate.getName());
+        user.setSureName(userUpdate.getSureName());
+
+        return mapper.toUserResponse(user);
     }
 }

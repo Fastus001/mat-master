@@ -12,6 +12,7 @@ import pl.fastus.matmaster.exceptions.UserAlreadyExistException;
 import pl.fastus.matmaster.exceptions.UserNotFoundException;
 import pl.fastus.matmaster.user.dto.UserRequest;
 import pl.fastus.matmaster.user.dto.UserResponse;
+import pl.fastus.matmaster.user.dto.UserUpdate;
 
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
+    public static final String LOGIN = "tomek@midex.pl";
     @Mock
     UserRepository repository;
 
@@ -38,13 +40,13 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userRequest = new UserRequest().setLogin("tomek@midex.pl")
+        userRequest = new UserRequest().setLogin(LOGIN)
                 .setPassword("password")
                 .setName("Tom")
                 .setSureName("Kar");
 
         userToReturn = User.builder()
-                .login("tomek@midex.pl")
+                .login(LOGIN)
                 .password("password")
                 .name("Tom")
                 .sureName("Kar")
@@ -52,7 +54,7 @@ class UserServiceTest {
                 .status(Status.ACTIVE)
                 .build();
 
-        userResponseToReturn = new UserResponse().setLogin("tomek@midex.pl")
+        userResponseToReturn = new UserResponse().setLogin(LOGIN)
                 .setPassword("password")
                 .setName("Tom")
                 .setSureName("Kar");
@@ -67,7 +69,7 @@ class UserServiceTest {
         final UserResponse userResponse = service.createUser(userRequest);
 
         assertAll(
-                ()->assertEquals("tomek@midex.pl", userResponse.getLogin()),
+                ()->assertEquals(LOGIN, userResponse.getLogin()),
                 ()->assertEquals("password", userResponse.getPassword()),
                 ()->assertEquals("Tom", userResponse.getName()),
                 ()->assertEquals("Kar", userResponse.getSureName())
@@ -95,10 +97,10 @@ class UserServiceTest {
         given(repository.findById(any())).willReturn(Optional.of(userToReturn));
         given(mapper.toUserResponse(any(User.class))).willReturn(userResponseToReturn);
 
-        final UserResponse userResponse = service.getUserByLogin("tomek@midex.pl");
+        final UserResponse userResponse = service.getUserByLogin(LOGIN);
 
         assertAll(
-                ()->assertEquals("tomek@midex.pl", userResponse.getLogin()),
+                ()->assertEquals(LOGIN, userResponse.getLogin()),
                 ()->assertEquals("password", userResponse.getPassword()),
                 ()->assertEquals("Tom", userResponse.getName()),
                 ()->assertEquals("Kar", userResponse.getSureName())
@@ -112,7 +114,49 @@ class UserServiceTest {
     void getUserByLoginShouldThrowException() {
         given(repository.findById(any())).willReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, ()->service.getUserByLogin("tomek@midex.pl"));
+        assertThrows(UserNotFoundException.class, ()->service.getUserByLogin(LOGIN));
+
+        verify(repository, times(1)).findById(any());
+        verifyNoInteractions(mapper);
+    }
+
+    @Test
+    void updateUser() {
+        final UserUpdate userUpdate = new UserUpdate().setPassword("new password")
+                .setName("Greg")
+                .setSureName("Karma");
+
+        final UserResponse userResponseToReturn = new UserResponse()
+                .setLogin(LOGIN)
+                .setPassword("new password")
+                .setName("Greg")
+                .setSureName("Karma");
+
+        given(repository.findById(any())).willReturn(Optional.of(userToReturn));
+        given(mapper.toUserResponse(any(User.class))).willReturn(userResponseToReturn);
+
+        UserResponse userResponse = service.updateUser(LOGIN, userUpdate);
+
+        assertAll(
+                ()->assertEquals(LOGIN, userResponse.getLogin()),
+                ()->assertEquals("new password", userResponse.getPassword()),
+                ()->assertEquals("Greg", userResponse.getName()),
+                ()->assertEquals("Karma", userResponse.getSureName())
+        );
+
+        verify(repository, times(1)).findById(any());
+        verify(mapper, times(1)).toUserResponse(any(User.class));
+    }
+
+    @Test
+    void updateUserShouldThrowException() {
+        final UserUpdate userUpdate = new UserUpdate().setPassword("new password")
+                .setName("Greg")
+                .setSureName("Karma");
+
+        given(repository.findById(any())).willReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, ()->service.updateUser("wrong@mail.com", userUpdate));
 
         verify(repository, times(1)).findById(any());
         verifyNoInteractions(mapper);
