@@ -17,10 +17,10 @@ import pl.fastus.matmaster.user.dto.UserUpdate;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,6 +85,19 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.created[2]", is(5)))
                 .andExpect(jsonPath("$.created[3]", is(0)))
                 .andExpect(jsonPath("$.created[4]", is(1)));
+    }
+
+    @Test
+    void deactivate() throws Exception {
+        given(service.deactivateUser(any())).willReturn(LOGIN);
+
+        final String content = mockMvc.perform(delete("/api/v1/user/" + LOGIN))
+                .andExpect(status().isNoContent())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertEquals(LOGIN, content);
     }
 
     private void setUserRequestAndResponse() {

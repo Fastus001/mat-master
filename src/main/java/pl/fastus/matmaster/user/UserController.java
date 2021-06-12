@@ -28,4 +28,10 @@ public class UserController {
     public UserResponse update(@PathVariable("login") String id, @RequestBody UserUpdate userUpdate) {
         return userService.updateUser(id, userUpdate);
     }
+
+    @DeleteMapping("/{login}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public String deactivate(@PathVariable("login") String id) {
+        return userService.deactivateUser(id);
+    }
 }
