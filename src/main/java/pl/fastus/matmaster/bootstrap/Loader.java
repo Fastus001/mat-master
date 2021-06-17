@@ -51,10 +51,10 @@ public class Loader implements CommandLineRunner {
 
         BlogPostRequest blogPost = new BlogPostRequest().setTitle("Post 1")
                 .setParagraphs(List.of(paragraph1, paragraph2))
-                .setHeaderImageId(1L);
+                .setHeaderImageId(5L);
 
         BlogPostRequest blogPost1 = new BlogPostRequest().setTitle("Post 2")
-                .setHeaderImageId(1L);
+                .setHeaderImageId(5L);
 
 
         blogPostService.createBlogPost(blogPost);

@@ -20,6 +20,7 @@ public class BlogPostController {
 
     private final BlogPostService blogPostService;
 
+    @CrossOrigin
     @GetMapping
     public List<BlogPostResponse> getAllByStatus(@RequestParam Optional<Status> status){
         if(status.isEmpty()){

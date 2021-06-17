@@ -21,6 +21,7 @@ public class ImageController {
 
     private final ImageService imageService;
 
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Long uploadImage(@RequestParam MultipartFile multipartImage) throws IOException {
@@ -30,7 +31,7 @@ public class ImageController {
 
         return imageService.saveImage(image);
     }
-
+    @CrossOrigin
     @GetMapping(value = "/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
     public Resource getImage(@PathVariable Long id) {
         final byte[] picture = imageService.findImageById(id)
