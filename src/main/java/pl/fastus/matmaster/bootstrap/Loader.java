@@ -45,16 +45,18 @@ public class Loader implements CommandLineRunner {
     }
 
     private void loadBlogPosts() {
-        Paragraph paragraph1 = Paragraph.builder().headerText("Header1").text("Text1").build();
+        Paragraph paragraph1 = Paragraph.builder().headerText("Header1").text("Text1").imageId(6L).build();
 
-        Paragraph paragraph2 = Paragraph.builder().headerText("Header2").text("Text2").build();
+        Paragraph paragraph2 = Paragraph.builder().headerText("Header2").text("Text2").imageId(6L).build();
+
+        Paragraph paragraph3 = Paragraph.builder().headerText("Header3").text("Text3").build();
 
         BlogPostRequest blogPost = new BlogPostRequest().setTitle("Post 1")
-                .setParagraphs(List.of(paragraph1, paragraph2))
-                .setHeaderImageId(5L);
+                .setParagraphs(List.of(paragraph1, paragraph2, paragraph3))
+                .setHeaderImageId(6L);
 
         BlogPostRequest blogPost1 = new BlogPostRequest().setTitle("Post 2")
-                .setHeaderImageId(5L);
+                .setHeaderImageId(6L);
 
 
         blogPostService.createBlogPost(blogPost);
