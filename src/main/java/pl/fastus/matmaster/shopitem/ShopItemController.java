@@ -15,6 +15,7 @@ public class ShopItemController {
 
     private final ShopItemService service;
 
+    @CrossOrigin
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ShopItemResponse> getAllShopItems(){
